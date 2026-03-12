@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Glassmorphism UI Card</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-start: #1A0933;
+      --bg-end: #2A0A52;
+      --glass-bg: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.20);
+      --glass-shadow: rgba(0, 0, 0, 0.4);
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+
+    /* ─── BACKGROUND ─────────────────────────────────────────────── */
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* ─── BLOBS ──────────────────────────────────────────────────── */
+    .blob-wrapper {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.65;
+      animation: floatBlob linear infinite;
+      will-change: transform;
+    }
+
+    /* Yellow blob – top-left */
+    .blob-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle at 40% 40%, #FFE033, #FF8C00);
+      top: -140px; left: -120px;
+      animation-duration: 18s;
+      animation-delay: 0s;
+      box-shadow: 0 0 80px 20px rgba(255, 200, 0, 0.35);
+    }
+
+    /* Pink / Magenta blob – top-right */
+    .blob-2 {
+      width: 440px; height: 440px;
+      background: radial-gradient(circle at 60% 30%, #FF4DAF, #C026D3);
+      top: -80px; right: -100px;
+      animation-duration: 22s;
+      animation-delay: -5s;
+      box-shadow: 0 0 80px 20px rgba(255, 77, 175, 0.35);
+    }
+
+    /* Electric Blue blob – bottom-left */
+    .blob-3 {
+      width: 480px; height: 480px;
+      background: radial-gradient(circle at 35% 65%, #22D3EE, #3B82F6);
+      bottom: -140px; left: -80px;
+      animation-duration: 26s;
+      animation-delay: -10s;
+      box-shadow: 0 0 80px 20px rgba(34, 211, 238, 0.30);
+    }
+
+    /* Orange blob – bottom-right */
+    .blob-4 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle at 55% 55%, #FB923C, #EF4444);
+      bottom: -120px; right: -80px;
+      animation-duration: 20s;
+      animation-delay: -15s;
+      box-shadow: 0 0 80px 20px rgba(251, 146, 60, 0.35);
+    }
+
+    /* Purple blob – center-ish */
+    .blob-5 {
+      width: 300px; height: 300px;
+      background: radial-gradient(circle at 50% 50%, #A855F7, #6D28D9);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation-duration: 30s;
+      animation-delay: -8s;
+      opacity: 0.45;
+      box-shadow: 0 0 60px 15px rgba(168, 85, 247, 0.30);
+    }
+
+    @keyframes floatBlob {
+      0%   { transform: translate(0px, 0px) scale(1); }
+      25%  { transform: translate(30px, -25px) scale(1.04); }
+      50%  { transform: translate(-20px, 20px) scale(0.97); }
+      75%  { transform: translate(15px, 30px) scale(1.02); }
+      100% { transform: translate(0px, 0px) scale(1); }
+    }
+
+    .blob-5 {
+      animation-name: floatBlobCenter;
+    }
+
+    @keyframes floatBlobCenter {
+      0%   { transform: translate(-50%, -50%) scale(1); }
+      33%  { transform: translate(calc(-50% + 40px), calc(-50% - 30px)) scale(1.08); }
+      66%  { transform: translate(calc(-50% - 30px), calc(-50% + 20px)) scale(0.95); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    /* ─── GLASS CARD ─────────────────────────────────────────────── */
+    .scene {
+      position: relative;
+      z-index: 10;
+      perspective: 1000px;
+      padding: 20px;
+    }
+
+    .glass-card {
+      width: min(560px, calc(100vw - 40px));
+      background: var(--glass-bg);
+      backdrop-filter: blur(25px) saturate(180%);
+      -webkit-backdrop-filter: blur(25px) saturate(180%);
+      border: 1px solid var(--glass-border);
+      border-radius: 32px;
+      padding: 52px 48px 48px;
+      position: relative;
+      box-shadow:
+        0 8px 32px var(--glass-shadow),
+        0 1px 0 rgba(255, 255, 255, 0.12) inset,
+        0 -1px 0 rgba(0, 0, 0, 0.15) inset;
+      transition:
+        transform 0.4s cubic-bezier(0.23, 1, 0.32, 1),
+        box-shadow 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+      overflow: hidden;
+    }
+
+    /* Inner highlight arc */
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 32px;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.13) 0%,
+        rgba(255, 255, 255, 0.03) 45%,
+        transparent 70%
+      );
+      pointer-events: none;
+    }
+
+    /* Subtle interior glow at bottom */
+    .glass-card::after {
+      content: '';
+      position: absolute;
+      bottom: -60px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 70%;
+      height: 120px;
+      background: radial-gradient(ellipse at center, rgba(168, 85, 247, 0.25), transparent 70%);
+      pointer-events: none;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-8px) scale(1.015) rotateX(1deg);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.55),
+        0 1px 0 rgba(255, 255, 255, 0.18) inset,
+        0 0 0 1px rgba(255, 255, 255, 0.12) inset,
+        0 0 60px rgba(168, 85, 247, 0.20);
+    }
+
+    /* ─── BADGE ──────────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(90deg, rgba(168, 85, 247, 0.35), rgba(99, 102, 241, 0.35));
+      border: 1px solid rgba(168, 85, 247, 0.45);
+      border-radius: 999px;
+      padding: 5px 14px 5px 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: #E9D5FF;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      width: fit-content;
+    }
+
+    .badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #A855F7, #C084FC);
+      box-shadow: 0 0 8px rgba(168, 85, 247, 0.9);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; box-shadow: 0 0 8px rgba(168, 85, 247, 0.9); }
+      50%       { opacity: 0.6; box-shadow: 0 0 4px rgba(168, 85, 247, 0.4); }
+    }
+
+    /* ─── TYPOGRAPHY ─────────────────────────────────────────────── */
+    .card-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.45);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-size: clamp(1.9rem, 5vw, 2.6rem);
+      font-weight: 800;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+
+    .card-title span {
+      background: linear-gradient(90deg, #C084FC, #818CF8, #38BDF8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .card-desc {
+      font-size: 0.97rem;
+      font-weight: 300;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.60);
+      margin-bottom: 36px;
+    }
+
+    /* ─── STATS ROW ──────────────────────────────────────────────── */
+    .stats-row {
+      display: flex;
+      gap: 0;
+      margin-bottom: 36px;
+    }
+
+    .stat {
+      flex: 1;
+      text-align: center;
+      padding: 18px 12px;
+      position: relative;
+    }
+
+    .stat + .stat::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 20%; height: 60%;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .stat-value {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: rgba(255, 255, 255, 0.40);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* ─── DIVIDER ─────────────────────────────────────────────────── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.12), transparent);
+      margin-bottom: 32px;
+    }
+
+    /* ─── BUTTONS ─────────────────────────────────────────────────── */
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      border-radius: 14px;
+      padding: 14px 28px;
+      transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+      position: relative;
+      overflow: hidden;
+      flex: 1;
+      min-width: 130px;
+      letter-spacing: 0.02em;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background 0.25s;
+    }
+
+    .btn:hover::after {
+      background: rgba(255,255,255,0.07);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(124, 58, 237, 0.45);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(124, 58, 237, 0.60);
+    }
+
+    .btn-ghost {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(255, 255, 255, 0.80);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .btn-ghost:hover {
+      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.10);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ─── AVATAR ROW ─────────────────────────────────────────────── */
+    .avatar-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .avatars {
+      display: flex;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.15);
+      margin-right: -9px;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.2s;
+    }
+
+    .avatar:hover {
+      transform: translateY(-3px);
+      z-index: 5;
+    }
+
+    .avatar:last-child {
+      margin-right: 0;
+    }
+
+    .av1 { background: linear-gradient(135deg, #F472B6, #EC4899); }
+    .av2 { background: linear-gradient(135deg, #60A5FA, #3B82F6); }
+    .av3 { background: linear-gradient(135deg, #34D399, #10B981); }
+    .av4 { background: linear-gradient(135deg, #FBBF24, #F59E0B); }
+
+    .avatar-text {
+      font-size: 0.76rem;
+      color: rgba(255,255,255,0.45);
+    }
+
+    .avatar-text strong {
+      color: rgba(255,255,255,0.75);
+      font-weight: 600;
+    }
+
+    /* ─── TILT JS (mouse parallax) ───────────────────────────────── */
+    .scene {
+      transform-style: preserve-3d;
+    }
+
+    /* ─── RESPONSIVE ─────────────────────────────────────────────── */
+    @media (max-width: 580px) {
+      .glass-card {
+        padding: 36px 28px 36px;
+        border-radius: 24px;
+      }
+      .stats-row {
+        flex-wrap: wrap;
+      }
+      .stat {
+        flex: 1 1 45%;
+      }
+      .btn-group {
+        flex-direction: column;
+      }
+      .btn {
+        flex: unset;
+        width: 100%;
+      }
+    }
+
+    @media (max-height: 700px) {
+      body {
+        overflow: auto;
+        align-items: flex-start;
+        padding: 40px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Floating Blobs ──────────────────────────── -->
+  <div class="blob-wrapper" aria-hidden="true">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+    <div class="blob blob-4"></div>
+    <div class="blob blob-5"></div>
+  </div>
+
+  <!-- ── Card Scene ──────────────────────────────── -->
+  <div class="scene">
+    <div class="glass-card" id="glassCard">
+
+      <!-- Badge -->
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Glass&thinsp;<wbr>morphism
+      </div>
+
+      <!-- Headline -->
+      <p class="card-eyebrow">Design System · 2026</p>
+      <h1 class="card-title">
+        The future of<br>
+        <span>UI is transparent</span>
+      </h1>
+      <p class="card-desc">
+        Crafted with frosted glass aesthetics, vibrant gradients, and silky-smooth
+        motion — inspired by Apple VisionOS and next-generation SaaS dashboards.
+      </p>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat">
+          <div class="stat-value">98<span style="font-size:1rem;font-weight:400;">%</span></div>
+          <div class="stat-label">Satisfaction</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">12k+</div>
+          <div class="stat-label">Users</div>
+        </div>
+        <div class="stat">
+          <div class="stat-value">4.9<span style="font-size:1rem;font-weight:400;">★</span></div>
+          <div class="stat-label">Rating</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- CTA -->
+      <div class="btn-group">
+        <button class="btn btn-primary">Get Started →</button>
+        <button class="btn btn-ghost">View Demo</button>
+      </div>
+
+      <!-- Social proof -->
+      <div class="avatar-row">
+        <div class="avatars">
+          <div class="avatar av1"></div>
+          <div class="avatar av2"></div>
+          <div class="avatar av3"></div>
+          <div class="avatar av4"></div>
+        </div>
+        <p class="avatar-text"><strong>2,400+</strong> designers already love it</p>
+      </div>
+
+    </div><!-- / glass-card -->
+  </div><!-- / scene -->
+
+  <script>
+    // ── Smooth 3-D tilt on mouse move ──────────────────────────────
+    const card  = document.getElementById('glassCard');
+    const scene = card.closest('.scene');
+    const MAX   = 10; // max tilt degrees
+
+    document.addEventListener('mousemove', (e) => {
+      const { innerWidth: W, innerHeight: H } = window;
+      const cx = W / 2, cy = H / 2;
+      const dx = (e.clientX - cx) / cx;   // -1 … +1
+      const dy = (e.clientY - cy) / cy;
+
+      const rotX = -dy * MAX;
+      const rotY =  dx * MAX;
+
+      card.style.transform =
+        `perspective(900px) rotateX(${rotX}deg) rotateY(${rotY}deg)`;
+    });
+
+    document.addEventListener('mouseleave', () => {
+      card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg)';
+    });
+
+    // ── Touch tilt for mobile ───────────────────────────────────────
+    document.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      const { innerWidth: W, innerHeight: H } = window;
+      const cx = W / 2, cy = H / 2;
+      const dx = (touch.clientX - cx) / cx;
+      const dy = (touch.clientY - cy) / cy;
+
+      card.style.transform =
+        `perspective(900px) rotateX(${-dy * MAX * 0.5}deg) rotateY(${dx * MAX * 0.5}deg)`;
+    }, { passive: true });
+
+    document.addEventListener('touchend', () => {
+      card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg)';
+    });
+
+    // ── Smooth blob parallax on mouse ──────────────────────────────
+    const blobs = document.querySelectorAll('.blob');
+    document.addEventListener('mousemove', (e) => {
+      const { innerWidth: W, innerHeight: H } = window;
+      const cx = (e.clientX / W - 0.5) * 2;  // -1 … 1
+      const cy = (e.clientY / H - 0.5) * 2;
+
+      blobs.forEach((blob, i) => {
+        const factor = (i + 1) * 6;
+        blob.style.transform =
+          `translate(${cx * factor}px, ${cy * factor}px) scale(${1 + Math.abs(cx) * 0.02})`;
+      });
+    });
+  </script>
+</body>
+</html>
